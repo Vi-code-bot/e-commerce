@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Index Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f9f9f9;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    #user-details {
+      display: none; /* Initially hide user details */
+      margin-top: 20px;
+      padding: 15px;
+      background: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    #login-history {
+      margin-top: 20px;
+    }
+
+    .login-record {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      background-color: #58bc82;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #46a36e;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to the Index Page</h1>
+  <div>
+    <button onclick="showUserDetails()">👤 Login Icon</button>
+    <div id="user-details">
+      <p><strong>Email:</strong> <span id="user-email"></span></p>
+      <div id="login-history">
+        <h3>All Login History:</h3>
+        <div id="history-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Fetch user details and all login records from localStorage
+    const user = JSON.parse(localStorage.getItem("user"));
+    const allLogins = JSON.parse(localStorage.getItem("allLogins"));
+
+    function showUserDetails() {
+      const userDetails = document.getElementById("user-details");
+      const userEmail = document.getElementById("user-email");
+      const historyList = document.getElementById("history-list");
+
+      if (user) {
+        userEmail.textContent = user.email; // Display the current user's email
+        userDetails.style.display = "block"; // Show the details
+
+        // Display all login records
+        if (allLogins && allLogins.length > 0) {
+          historyList.innerHTML = allLogins
+            .map(
+              (record) =>
+                `<div class="login-record">
+                  <strong>Email:</strong> ${record.email} <br>
+                  <strong>Time:</strong> ${new Date(record.timestamp).toLocaleString()}
+                </div>`
+            )
+            .join("");
+        } else {
+          historyList.innerHTML = "<p>No login history found.</p>";
+        }
+      } else {
+        alert("No user is logged in.");
+      }
+    }
+
+    // Logout function
+    function logout() {
+      localStorage.removeItem("user");
+      localStorage.removeItem("allLogins");
+      window.location.href = "/login.html";
+    }
+  </script>
+</body>
+</html>

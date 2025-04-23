@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eCommerce Website</title>
+  <link rel="stylesheet" href="./assets/css/style-prefix.css">
+  <script src="https://cdn.jsdelivr.net/npm/ionicons@5.5.2/dist/ionicons/ionicons.esm.js" type="module"></script>
+</head>
+<body>
+
+  <!-- Header Section with Search Bar -->
+  <header>
+    <div class="header-main">
+      <div class="container">
+        <a href="#" class="header-logo">
+          <img src="./assets/images/logo/logo.svg" alt="eCommerce Logo" width="120" height="36">
+        </a>
+
+        <div class="header-search-container">
+          <input type="search" id="search-field" class="search-field" placeholder="Enter your product name...">
+          <button id="search-btn" class="search-btn">
+            <ion-icon name="search-outline"></ion-icon>
+          </button>
+        </div>
+
+        <div class="header-user-actions">
+          <button class="action-btn"><ion-icon name="person-outline"></ion-icon></button>
+          <button class="action-btn"><ion-icon name="heart-outline"></ion-icon><span class="count">0</span></button>
+          <button class="action-btn"><ion-icon name="bag-handle-outline"></ion-icon><span class="count">0</span></button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <script>
+    // JavaScript for search functionality
+    document.getElementById('search-btn').addEventListener('click', function () {
+      const query = document.getElementById('search-field').value.toLowerCase();
+
+      // Define routes based on search terms
+      if (query.includes('laptop') || query.includes('desktop')) {
+        window.location.href = 'desktop.html';
+      } else if (query.includes('jeans') || query.includes('fashion')) {
+        window.location.href = 'mens.html';
+        // Optionally, add logic to scroll to the jeans section on mens.html if needed
+      } else if (query.includes('camera')) {
+        window.location.href = 'camera.html';
+      } else if (query.includes('tv')) {
+        window.location.href = 'tv.html';
+      } else {
+        alert('No results found. Please try another search term.');
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Shopping Cart</title>
+
+  <!-- Internal CSS for Styling -->
+  <style>
+    /* General Styling for the Cart Page */
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f5f5f5;
+      margin: 0;
+    }
+
+    .cart-container {
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    /* Total Amount Styling */
+    .total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.2rem;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+
+    .total span {
+      color: #333;
+    }
+
+    /* User Info Section */
+    .user-info {
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .user-info h2 {
+      font-size: 1.2rem;
+      color: #444;
+      margin-bottom: 10px;
+    }
+
+    .user-info label {
+      font-size: 0.9rem;
+      color: #666;
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    .user-info input[type="text"],
+    .user-info input[type="tel"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .user-info input[type="text"]:focus,
+    .user-info input[type="tel"]:focus {
+      border-color: #a2a2a2;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Checkout Button */
+    .checkout-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 20px;
+    }
+
+    .checkout-btn:hover {
+      background-color: #218838;
+    }
+
+    /* Cart Item Styling */
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      margin: 10px 0;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-item img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      margin-right: 15px;
+    }
+
+    .cart-item .item-details {
+      display: flex;
+      align-items: center;
+    }
+
+    .cart-item h4 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .cart-item p {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .cart-item button {
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .cart-item button:hover {
+      background-color: #ff0000;
+    }
+  </style>
+</head>
+<body>
+  <!-- Cart Container -->
+  <div class="cart-container">
+    <h1>Your Shopping Cart</h1>
+    <div id="cart-items"></div>
+
+    <!-- Total Amount -->
+    <div class="total">
+      <span>Total:</span>
+      <span id="total-amount">$0.00</span>
+    </div>
+
+    <!-- Address and Phone Number Fields -->
+    <div class="user-info">
+      <h2>Shipping Information</h2>
+      <label for="address">Address:</label>
+      <input type="text" id="address" name="address" placeholder="Enter your address" required>
+
+      <label for="phone">Phone Number:</label>
+      <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+    </div>
+
+    <!-- Checkout Button -->
+    <button class="checkout-btn" onclick="placeOrder()">Pay Now</button>
+  </div>
+
+  <!-- JavaScript for Cart Logic -->
+  <script>
+    // Display cart items and calculate total cost
+       // Display cart items and calculate total cost
+       function displayCart() {
+  const cartContainer = document.getElementById('cart-items');
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  cartContainer.innerHTML = ''; // Clear previous items
+
+  let total = 0;
+
+  if (cart.length === 0) {
+    cartContainer.innerHTML = '<p>Your cart is empty.</p>';
+  } else {
+    cart.forEach((item, index) => {
+      const itemElement = document.createElement('div');
+      itemElement.classList.add('cart-item');
+
+      itemElement.innerHTML = `
+        <div class="item-details">
+          <img src="${item.image}" alt="${item.name}">
+          <h4>${item.name}</h4>
+        </div>
+        <p>$${item.price.toFixed(2)}</p>
+        <button onclick="removeFromCart(${index})">Remove</button>
+      `;
+
+      cartContainer.appendChild(itemElement);
+      total += item.price;
+    });
+  }
+
+  // Update total amount
+  document.getElementById('total-amount').innerText = `$${total.toFixed(2)}`;
+}
+
+// Load cart on page load
+window.onload = displayCart;
+
+
+    // Remove item from cart
+    function removeFromCart(index) {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cart.splice(index, 1); // Remove item from cart array
+      localStorage.setItem('cart', JSON.stringify(cart)); // Update localStorage
+      displayCart(); // Refresh the cart display
+    }
+
+    // Place order (frontend and backend)
+    async function placeOrder() {
+  const userEmail = localStorage.getItem('userEmail');
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
+  const address = document.getElementById('address').value;
+  const phone = document.getElementById('phone').value;
+
+  if (!address || !phone) {
+    alert('Please fill in your address and phone number.');
+    return;
+  }
+
+  try {
+    // Send order details to backend
+    const response = await fetch('/place-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userEmail, items: cart, totalAmount, address, phone }),
+    });
+
+    const result = await response.json();
+    console.log(result.message);
+
+    // Save ordered items in order summary
+    localStorage.setItem('orderSummary', JSON.stringify(cart));
+
+    // **Clear ordered items from the cart**
+    localStorage.removeItem('cart');
+
+    // Redirect to the order summary page
+    window.location.href = 'order-summary.html';
+  } catch (error) {
+    console.error('Error placing order:', error);
+    alert('Something went wrong. Please try again.');
+  }
+}
+
+
+  </script>
+</body>
+</html>
